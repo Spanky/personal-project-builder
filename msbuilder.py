@@ -68,6 +68,7 @@ class MsBuilder:
 			
 		arg1 = '/t:Rebuild'
 		arg2 = '/p:Configuration=Release'
+		arg3 = '/m'
 		p = subprocess.call([self.msbuild, projPath, arg1, arg2, arg3])
 		if p==1: return False	# exit early
 		
