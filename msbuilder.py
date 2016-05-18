@@ -68,7 +68,7 @@ class MsBuilder:
 			
 		arg1 = '/t:Rebuild'
 		arg2 = '/p:Configuration=Release'
-		p = subprocess.call([self.msbuild, projPath, arg1, arg2])
+		p = subprocess.call([self.msbuild, projPath, arg1, arg2, arg3])
 		if p==1: return False	# exit early
 		
 		return True
@@ -90,7 +90,7 @@ class MsBuilder:
 		f.close()
 		match = re.search(r'<AssemblyName>(.*)</AssemblyName>', xml)
 		if not match:
-			print 'Could not find "AssemblyName" in test project file.'
+			print ('Could not find "AssemblyName" in test project file.')
 			return False
 			
 		outputFolder = os.path.dirname(testProject) + '\\bin\\Release\\'
@@ -108,7 +108,7 @@ class MsBuilder:
 		if os.path.isfile(self.trx2html):
 			subprocess.call([self.trx2html, resultFile])
 		else:
-			print 'TRX to HTML converter not found. path=' + self.trx2html
+			print ('TRX to HTML converter not found. path=' + self.trx2html)
 		
 		if p==1: return False # exit early
 			
@@ -135,13 +135,13 @@ class MsBuilder:
 			f = open(packFile)
 			xml = f.read()
 			f.close()
-			print xml
+			print (xml)
 			match = re.search(r'version="0.0.0.0"', xml)
 			if match:
 				# Found a non-versioned package being used by this project
 				return False
 		else:
-			print 'No "packages.config" file was found. path=' + packFile
+			print ('No "packages.config" file was found. path=' + packFile)
 			
 		return True
 		
@@ -150,7 +150,7 @@ class MsBuilder:
 		
 		# File header	
 		start = datetime.datetime.now()
-		print '\n'*5
+		print ('\n'*5)
 		summary += self.log('STARTED BUILD - ' + start.strftime("%Y-%m-%d %H:%M:%S"))
 
 		# Build the project
@@ -167,7 +167,7 @@ class MsBuilder:
 		if test is not None:
 			testOk = self.test(test)
 			if not testOk:
-				print self.log('TESTS: FAILED', start)
+				print (self.log('TESTS: FAILED', start))
 				sys.exit(100)
 			summary += self.log('TESTS: PASSED', start)
 		else:
@@ -177,7 +177,7 @@ class MsBuilder:
 		if nuspec is not None:
 			packOk = self.pack(nuspec, '0.0.0.0')
 			if not packOk:
-				print self.log('NUGET PACK: FAILED', start)
+				print (self.log('NUGET PACK: FAILED', start))
 				sys.exit(100)
 			summary += self.log('NUGET PACK: SUCCEEDED', start)
 		else:
@@ -185,7 +185,7 @@ class MsBuilder:
 			
 		# Validate dependencies
 		if not self.validate(proj):
-			print self.log('DEPENDENCIES: NOT VALIDATED - DETECTED UNVERSIONED DEPENDENCY', start)
+			print (self.log('DEPENDENCIES: NOT VALIDATED - DETECTED UNVERSIONED DEPENDENCY', start))
 			sys.exit(100)
 		summary += self.log('DEPENDENCIES: VALIDATED', start)
 
@@ -195,9 +195,9 @@ class MsBuilder:
 		summary += self.log('FINISHED BUILD', start)
 		
 		# Build summary
-		print '\n\n' + '-'*80
-		print summary
-		print '-'*80
+		print ('\n\n' + '-'*80)
+		print (summary)
+		print ('-'*80)
 		
 	def log(self, message, start=None):
 		timestamp = ''
@@ -208,5 +208,5 @@ class MsBuilder:
 			timestamp = split.strftime("%Y-%m-%d %H:%M:%S") + '\t'
 			numsecs = ' (' + str(diff.seconds) + ' seconds)'
 		msg = timestamp + message + numsecs + '\n\n'
-		print '='*10 + '> ' + msg
+		print ('='*10 + '> ' + msg)
 		return msg
