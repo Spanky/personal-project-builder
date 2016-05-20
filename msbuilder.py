@@ -66,7 +66,7 @@ class MsBuilder:
 		if not os.path.isfile(self.msbuild):
 			raise Exception('MsBuild.exe not found. path=' + self.msbuild)
 			
-		arg1 = '/t:Rebuild'
+		arg1 = '/t:Build'
 		arg2 = '/p:Configuration=Release'
 		arg3 = '/m'
 		p = subprocess.call([self.msbuild, projPath, arg1, arg2, arg3])
@@ -81,7 +81,7 @@ class MsBuilder:
 			raise Exception('MsTest.exe not found. path=' + self.mstest)
 			
 		# build the test project
-		arg1 = '/t:Rebuild'
+		arg1 = '/t:Build'
 		arg2 = '/p:Configuration=Release'
 		p = subprocess.call([self.msbuild, testProject, arg1, arg2])
 		
